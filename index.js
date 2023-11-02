@@ -1,7 +1,17 @@
-require('dotenv').config()
+require('dotenv').config();
+require('console.table');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const cTable = require('console.table');
+
+const [
+  allDepartments,
+  allRoles,
+  allEmployees,
+  addDepartment,
+  addRole,
+  addEmployee,
+  updateEmployeeRole
+] = require('./db/query.js');
 
 const db = mysql.createConnection(
   {
@@ -13,28 +23,32 @@ const db = mysql.createConnection(
   console.log(`Connected to the employee_db database.`)
 );
 
-db.query(`SELECT * FROM departments`, function (err, results) {
-  console.table(results);
-});
+const questions = [
+  {
+    type: 'list',
+    message: 'What would you like to do?',
+    name: 'options',
+    choices: [
+      'View All Employees',
+      'Add Employee',
+      'Updata Employee Role',
+      'View All Roles',
+      'Add Roll',
+      'View All Departments',
+      'Add Department',
+    ],
+  },
+];
 
-db.query(
-  `SELECT roles.id, title, name AS department, salary
-   FROM roles 
-   JOIN departments ON roles.department_id = departments.id
-   ORDER BY roles.id`,
-  function (err, results) {
-    console.table(results);
-  }
-);
+// Function to initialize app
+function init() {
+  inquirer
+    .prompt(questions)
+    .then((data) => {
 
-db.query(
-  `SELECT e.id, e.first_name, e.last_name, title, name AS department, salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
-   FROM roles
-   JOIN employees e ON e.role_id = roles.id
-   LEFT JOIN employees m ON e.manager_id = m.id
-   JOIN departments ON roles.department_id = departments.id
-   ORDER BY e.id`,
-  function (err, results) {
-    console.table(results);
-  }
-);
+    })
+    .catch(console.log);
+}
+
+// Function call to initialize app
+init();
