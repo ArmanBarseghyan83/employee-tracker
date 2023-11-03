@@ -32,7 +32,7 @@ const allEmployees = (db) => {
   ORDER BY e.id`
     )
     .then(([results]) => {
-      console.table(results);
+      console.table(' ', results);
     })
     .catch(console.log);
 };
