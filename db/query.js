@@ -1,13 +1,14 @@
-const allDepartments = (db) => {
+const allDepartments = (db, init) => {
   db.promise()
     .query(`SELECT * FROM departments`)
     .then(([results]) => {
-      console.table(results);
+      console.table(results)
+      init()
     })
     .catch(console.log);
 };
 
-const allRoles = (db) => {
+const allRoles = (db, init) => {
   db.promise()
     .query(
       `SELECT roles.id, title, name AS department, salary
@@ -17,11 +18,12 @@ const allRoles = (db) => {
     )
     .then(([results]) => {
       console.table(results);
+      init()
     })
     .catch(console.log);
 };
 
-const allEmployees = (db) => {
+const allEmployees = (db, init) => {
   db.promise()
     .query(
       `SELECT e.id, e.first_name, e.last_name, title, name AS department, salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
@@ -33,20 +35,19 @@ const allEmployees = (db) => {
     )
     .then(([results]) => {
       console.table(' ', results);
+      init()
     })
     .catch(console.log);
 };
 
-const addDepartment = (db, depName) => {
+const addDepartment = (db, init, depName) => {
   db.promise()
     .query(`INSERT INTO departments (name) VALUES ( ? )`, depName)
-    .then(() => {
-      console.log(`Added ${depName} to the database`);
-    })
+    .then(() => init())
     .catch(console.log);
 };
 
-const addRole = (db, title, salary, department) => {
+const addRole = (db, init, title, salary, department) => {
   db.promise()
     .query(`SELECT id FROM departments WHERE name = ?`, department)
     .then(([results]) => {
@@ -55,12 +56,12 @@ const addRole = (db, title, salary, department) => {
         `INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`,
         [title, salary, departmentId]
       );
-      console.log(`Added ${title} to the database`);
+      init()
     })
     .catch(console.log);
 };
 
-const addEmployee = (db, first_name, last_name, role, manager = '') => {
+const addEmployee = (db, init, first_name, last_name, role, manager = '') => {
   let roleId;
   let managerId;
   db.promise()
@@ -84,24 +85,24 @@ const addEmployee = (db, first_name, last_name, role, manager = '') => {
         VALUES (?, ?, ?, ?)`,
         [first_name, last_name, roleId, managerId]
       );
-      console.log(`Added ${first_name} ${last_name} to the database`);
+      init()
     })
     .catch(console.log);
 };
 
-const updateEmployeeRole = (db, employee, role) => {
-    db.promise()
-      .query(`SELECT id FROM roles WHERE title = ?`, role)
-      .then(([results]) => {
-        const roleId = results[0].id;
-        db.promise().query(
-          `UPDATE employees SET role_id = ? WHERE CONCAT(first_name, ' ', last_name) = ?`,
-          [roleId, employee]
-        );
-        console.log(`Updated ${employee}'role`);
-      })
-      .catch(console.log);
-  };
+const updateEmployeeRole = (db, init, employee, role) => {
+  db.promise()
+    .query(`SELECT id FROM roles WHERE title = ?`, role)
+    .then(([results]) => {
+      const roleId = results[0].id;
+      db.promise().query(
+        `UPDATE employees SET role_id = ? WHERE CONCAT(first_name, ' ', last_name) = ?`,
+        [roleId, employee]
+      );
+      init()
+    })
+    .catch(console.log);
+};
 
 module.exports = [
   allDepartments,
@@ -110,5 +111,5 @@ module.exports = [
   addDepartment,
   addRole,
   addEmployee,
-  updateEmployeeRole
+  updateEmployeeRole,
 ];

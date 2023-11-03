@@ -23,6 +23,42 @@ const db = mysql.createConnection(
   console.log(`Connected to the employee_db database.`)
 );
 
+
+let employees = [];
+let roles = [];
+let departments = [];
+
+const getEmployeesNames = () => {
+  db.promise()
+    .query(`SELECT first_name, last_name FROM employees`)
+    .then(([results]) => {
+      results.forEach((result) => employees.push(`${result.first_name} ${result.last_name}`))
+    })
+    .catch(console.log);
+};
+
+const getRolesTitless = () => {
+  db.promise()
+    .query(`SELECT title FROM roles`)
+    .then(([results]) => {
+      results.forEach((result) => roles.push(result.title))
+    })
+    .catch(console.log);
+};
+
+const getDepartmentNames = () => {
+  db.promise()
+    .query(`SELECT name FROM departments`)
+    .then(([results]) => {
+      results.forEach((result) => departments.push(result.name))
+    })
+    .catch(console.log);
+};
+
+getEmployeesNames();
+getRolesTitless();
+getDepartmentNames()
+
 const allQuestions = [
   {
     type: 'list',
@@ -31,7 +67,7 @@ const allQuestions = [
     choices: [
       'View All Employees',
       'Add Employee',
-      'Updata Employee Role',
+      'Update Employee Role',
       'View All Roles',
       'Add Roll',
       'View All Departments',
@@ -56,33 +92,13 @@ const addEmpQuestions = [
     type: 'list',
     message: "What is the employee's role?",
     name: 'role',
-    choices: [
-      'Sales Lead',
-      'Salesperson',
-      'Lead Engineer',
-      'Software Engineer',
-      'Account Manager',
-      'Accountant',
-      'Legal Team Lead',
-      'Lawyer',
-    ],
+    choices: roles,
   },
   {
     type: 'list',
     message: "Who is the employee's manager?",
     name: 'manager',
-    choices: [
-      'None',
-      'John Doe',
-      'Mike Chan',
-      'Ashley Rodriguez',
-      'Kevin Tupik',
-      'Kunal Singh',
-      'Malia Broun',
-      'Sarah Lourd',
-      'Tom Allen',
-      'Sam Kash',
-    ],
+    choices: employees,
   },
 ];
 
@@ -91,33 +107,13 @@ const updEmpRoleQuestions = [
     type: 'list',
     message: "Which employee's role do you want to update?",
     name: 'name',
-    choices: [
-      'none',
-      'John Doe',
-      'Mike Chan',
-      'Ashley Rodriguez',
-      'Kevin Tupik',
-      'Kunal Singh',
-      'Malia Broun',
-      'Sarah Lourd',
-      'Tom Allen',
-      'Sam Kash',
-    ],
+    choices: employees,
   },
   {
     type: 'list',
     message: 'Which role do you want to assign the selected employee?',
     name: 'role',
-    choices: [
-      'Sales Lead',
-      'Salesperson',
-      'Lead Engineer',
-      'Software Engineer',
-      'Account Manager',
-      'Accountant',
-      'Legal Team Lead',
-      'Lawyer',
-    ],
+    choices: roles,
   },
 ];
 
@@ -136,7 +132,7 @@ const addRoleQuestions = [
     type: 'list',
     message: 'Which department does the role belong to?',
     name: 'name',
-    choices: ['Engineering', 'Finance', 'Legal', 'Sales'],
+    choices: departments,
   },
 ];
 
@@ -149,7 +145,7 @@ const addDepQuestions = [
 ];
 
 // Function to initialize app
-function init() {
+const init = () => {
   inquirer
     .prompt(allQuestions)
     .then((data) => {
@@ -157,31 +153,43 @@ function init() {
         inquirer.prompt(addEmpQuestions).then((data) => {
           addEmployee(
             db,
+            init,
             data.firstName,
             data.lastName,
             data.role,
             data.manager === 'None' ? '' : data.manager
           );
-          init();
+          console.log(
+            `Added ${data.firstName} ${data.lastName} to the database`
+          );
         });
-      } else if (data.option === 'Updata Employee Role') {
+      } else if (data.option === 'Update Employee Role') {
         inquirer.prompt(updEmpRoleQuestions).then((data) => {
-          init();
+          updateEmployeeRole(db, init, data.name, data.role);
+          console.log(`Updated ${data.name}' role`);
         });
       } else if (data.option === 'Add Roll') {
         inquirer.prompt(addRoleQuestions).then((data) => {
-          init();
+          addRole(db, init, data.role, data.salary, data.name);
+          console.log(`Added ${data.role} to the database`);
         });
       } else if (data.option === 'Add Department') {
         inquirer.prompt(addDepQuestions).then((data) => {
-          init();
+          addDepartment(db, init, data.name);
+          console.log(`Added ${data.name} to the database`);
         });
-      } else {
-        init();
+      } else if (data.option === 'View All Employees') {
+        allEmployees(db, init);
+      } else if (data.option === 'View All Roles') {
+        allRoles(db, init);
+      } else if (data.option === 'View All Departments') {
+        allDepartments(db, init);
+      } else if (data.option === 'Quit') {
+        process.exit();
       }
     })
     .catch(console.log);
-}
+};
 
 // Function call to initialize app
 init();
