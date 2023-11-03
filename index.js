@@ -1,7 +1,13 @@
 require('dotenv').config();
 require('console.table');
+const db = require('./db/dbConnection.js')
 const inquirer = require('inquirer');
-const mysql = require('mysql2');
+
+const [
+  getEmployeesNames,
+  getRolesTitles,
+  getDepartmentNames,
+] = require('./db/namesQuery.js');
 
 const [
   allDepartments,
@@ -11,61 +17,25 @@ const [
   addRole,
   addEmployee,
   updateEmployeeRole,
-] = require('./db/query.js');
+] = require('./db/questionsQuery.js');
 
 const [
   allQuestions,
   addEmpQuestions,
   updEmpRoleQuestions,
   addRoleQuestions,
-  addDepQuestions
-] = require('./lib/questions.js')
-
-const db = mysql.createConnection(
-  {
-    host: 'localhost',
-    user: 'root',
-    password: process.env.DB_PASSWORD,
-    database: 'employee_db',
-  },
-  console.log(`Connected to the employee_db database.`)
-);
+  addDepQuestions,
+] = require('./lib/questions.js');
 
 
 let employees = [];
 let roles = [];
 let departments = [];
 
-const getEmployeesNames = () => {
-  db.promise()
-    .query(`SELECT first_name, last_name FROM employees`)
-    .then(([results]) => {
-      results.forEach((result) => employees.push(`${result.first_name} ${result.last_name}`))
-    })
-    .catch(console.log);
-};
 
-const getRolesTitles = () => {
-  db.promise()
-    .query(`SELECT title FROM roles`)
-    .then(([results]) => {
-      results.forEach((result) => roles.push(result.title))
-    })
-    .catch(console.log);
-};
-
-const getDepartmentNames = () => {
-  db.promise()
-    .query(`SELECT name FROM departments`)
-    .then(([results]) => {
-      results.forEach((result) => departments.push(result.name))
-    })
-    .catch(console.log);
-};
-
-getEmployeesNames();
-getRolesTitles();
-getDepartmentNames()
+getEmployeesNames(db, employees);
+getRolesTitles(db, roles);
+getDepartmentNames(db, departments);
 
 // Function to initialize app
 const init = () => {
