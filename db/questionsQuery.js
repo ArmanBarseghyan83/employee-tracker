@@ -2,7 +2,7 @@ const allDepartments = (db, init) => {
   db.promise()
     .query(`SELECT * FROM departments`)
     .then(([results]) => {
-      console.table(results)
+      console.table(' ', results)
       init()
     })
     .catch(console.log);
@@ -17,7 +17,7 @@ const allRoles = (db, init) => {
   ORDER BY roles.id`
     )
     .then(([results]) => {
-      console.table(results);
+      console.table(' ', results);
       init()
     })
     .catch(console.log);
@@ -39,6 +39,22 @@ const allEmployees = (db, init) => {
     })
     .catch(console.log);
 };
+
+
+const depUtilizedBudget = (db, init) => {
+  db.promise()
+    .query(
+      `SELECT name AS department, sum(salary) AS 'Total Utilized Budget'
+      FROM roles JOIN departments 
+      ON roles.department_id = departments.id GROUP BY name;`
+    )
+    .then(([results]) => {
+      console.table(' ', results);
+      init()
+    })
+    .catch(console.log);
+};
+
 
 const addDepartment = (db, init, depName) => {
   db.promise()
@@ -112,4 +128,5 @@ module.exports = [
   addRole,
   addEmployee,
   updateEmployeeRole,
+  depUtilizedBudget
 ];

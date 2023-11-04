@@ -18,7 +18,7 @@ const getRolesTitles = (db, roles) => {
     .catch(console.log);
 };
 
-const getDepartmentNames = (db, departments) => {
+const getDepartmentsNames = (db, departments) => {
   db.promise()
     .query(`SELECT name FROM departments`)
     .then(([results]) => {
@@ -27,4 +27,4 @@ const getDepartmentNames = (db, departments) => {
     .catch(console.log);
 };
 
-module.exports = [getEmployeesNames, getRolesTitles, getDepartmentNames];
+module.exports = [getEmployeesNames, getRolesTitles, getDepartmentsNames];

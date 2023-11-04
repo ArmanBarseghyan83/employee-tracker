@@ -1,12 +1,12 @@
 require('dotenv').config();
 require('console.table');
-const db = require('./db/dbConnection.js')
+const db = require('./db/dbConnection.js');
 const inquirer = require('inquirer');
 
 const [
   getEmployeesNames,
   getRolesTitles,
-  getDepartmentNames,
+  getDepartmentsNames,
 ] = require('./db/namesQuery.js');
 
 const [
@@ -17,6 +17,7 @@ const [
   addRole,
   addEmployee,
   updateEmployeeRole,
+  depUtilizedBudget,
 ] = require('./db/questionsQuery.js');
 
 const [
@@ -27,15 +28,13 @@ const [
   addDepQuestions,
 ] = require('./lib/questions.js');
 
-
 let employees = [];
 let roles = [];
 let departments = [];
 
-
 getEmployeesNames(db, employees);
 getRolesTitles(db, roles);
-getDepartmentNames(db, departments);
+getDepartmentsNames(db, departments);
 
 // Function to initialize app
 const init = () => {
@@ -77,6 +76,8 @@ const init = () => {
         allRoles(db, init);
       } else if (data.option === 'View All Departments') {
         allDepartments(db, init);
+      } else if (data.option === 'View Total Utilized Budget By Department') {
+        depUtilizedBudget(db, init);
       } else if (data.option === 'Quit') {
         process.exit();
       }
