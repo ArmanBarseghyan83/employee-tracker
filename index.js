@@ -4,12 +4,6 @@ const db = require('./db/dbConnection.js');
 const inquirer = require('inquirer');
 
 const [
-  getEmployeesNames,
-  getRolesTitles,
-  getDepartmentsNames,
-] = require('./db/namesQuery.js');
-
-const [
   allDepartments,
   allRoles,
   allEmployees,
@@ -28,21 +22,14 @@ const [
   addDepQuestions,
 ] = require('./lib/questions.js');
 
-let employees = [];
-let roles = [];
-let departments = [];
-
-getEmployeesNames(db, employees);
-getRolesTitles(db, roles);
-getDepartmentsNames(db, departments);
-
 // Function to initialize app
 const init = () => {
+  allQuestions()
   inquirer
     .prompt(allQuestions())
     .then((data) => {
       if (data.option === 'Add Employee') {
-        inquirer.prompt(addEmpQuestions(roles, employees)).then((data) => {
+        inquirer.prompt(addEmpQuestions()).then((data) => {
           addEmployee(
             db,
             init,
@@ -50,18 +37,18 @@ const init = () => {
             data.lastName,
             data.role,
             data.manager === 'None' ? '' : data.manager
-          );
+          )
           console.log(
             `Added ${data.firstName} ${data.lastName} to the database`
           );
         });
       } else if (data.option === 'Update Employee Role') {
-        inquirer.prompt(updEmpRoleQuestions(roles, employees)).then((data) => {
+        inquirer.prompt(updEmpRoleQuestions()).then((data) => {
           updateEmployeeRole(db, init, data.name, data.role);
           console.log(`Updated ${data.name}' role`);
         });
       } else if (data.option === 'Add Roll') {
-        inquirer.prompt(addRoleQuestions(departments)).then((data) => {
+        inquirer.prompt(addRoleQuestions()).then((data) => {
           addRole(db, init, data.role, data.salary, data.name);
           console.log(`Added ${data.role} to the database`);
         });
@@ -71,7 +58,7 @@ const init = () => {
           console.log(`Added ${data.name} to the database`);
         });
       } else if (data.option === 'View All Employees') {
-        allEmployees(db, init);
+        allEmployees(db, init)
       } else if (data.option === 'View All Roles') {
         allRoles(db, init);
       } else if (data.option === 'View All Departments') {

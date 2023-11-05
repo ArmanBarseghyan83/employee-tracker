@@ -1,4 +1,5 @@
-const getEmployeesNames = (db, employees) => {
+// Push first and last names from the db to the employees array.
+const updateEmployeeNames = (db, employees) => {
   db.promise()
     .query(`SELECT first_name, last_name FROM employees`)
     .then(([results]) => {
@@ -9,7 +10,8 @@ const getEmployeesNames = (db, employees) => {
     .catch(console.log);
 };
 
-const getRolesTitles = (db, roles) => {
+// Push roles titles from the db to the roles array.
+const updateRoleTitles = (db, roles) => {
   db.promise()
     .query(`SELECT title FROM roles`)
     .then(([results]) => {
@@ -18,7 +20,8 @@ const getRolesTitles = (db, roles) => {
     .catch(console.log);
 };
 
-const getDepartmentsNames = (db, departments) => {
+// Push departments names from the db to the departments array.
+const updateDepartmentNames = (db, departments) => {
   db.promise()
     .query(`SELECT name FROM departments`)
     .then(([results]) => {
@@ -27,4 +30,4 @@ const getDepartmentsNames = (db, departments) => {
     .catch(console.log);
 };
 
-module.exports = [getEmployeesNames, getRolesTitles, getDepartmentsNames];
+module.exports = [updateEmployeeNames, updateRoleTitles, updateDepartmentNames];

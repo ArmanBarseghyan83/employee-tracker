@@ -1,3 +1,4 @@
+// View all departments.
 const allDepartments = (db, init) => {
   db.promise()
     .query(`SELECT * FROM departments`)
@@ -8,6 +9,7 @@ const allDepartments = (db, init) => {
     .catch(console.log);
 };
 
+// View all roles.
 const allRoles = (db, init) => {
   db.promise()
     .query(
@@ -23,6 +25,7 @@ const allRoles = (db, init) => {
     .catch(console.log);
 };
 
+// View all employees, their roles, salaries, departments, and managers.
 const allEmployees = (db, init) => {
   db.promise()
     .query(
@@ -40,7 +43,7 @@ const allEmployees = (db, init) => {
     .catch(console.log);
 };
 
-
+// View total utilized budget of all departments.
 const depUtilizedBudget = (db, init) => {
   db.promise()
     .query(
@@ -55,7 +58,7 @@ const depUtilizedBudget = (db, init) => {
     .catch(console.log);
 };
 
-
+// Add new department to the db.
 const addDepartment = (db, init, depName) => {
   db.promise()
     .query(`INSERT INTO departments (name) VALUES ( ? )`, depName)
@@ -63,6 +66,7 @@ const addDepartment = (db, init, depName) => {
     .catch(console.log);
 };
 
+// Add new role to the db.
 const addRole = (db, init, title, salary, department) => {
   db.promise()
     .query(`SELECT id FROM departments WHERE name = ?`, department)
@@ -77,6 +81,7 @@ const addRole = (db, init, title, salary, department) => {
     .catch(console.log);
 };
 
+// Add new employee to the db.
 const addEmployee = (db, init, first_name, last_name, role, manager = '') => {
   let roleId;
   let managerId;
@@ -106,6 +111,7 @@ const addEmployee = (db, init, first_name, last_name, role, manager = '') => {
     .catch(console.log);
 };
 
+// Update employee’s role
 const updateEmployeeRole = (db, init, employee, role) => {
   db.promise()
     .query(`SELECT id FROM roles WHERE title = ?`, role)
