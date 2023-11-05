@@ -20,11 +20,12 @@ const [
   updEmpRoleQuestions,
   addRoleQuestions,
   addDepQuestions,
+  updateChoices
 ] = require('./lib/questions.js');
 
 // Function to initialize app
 const init = () => {
-  allQuestions()
+  updateChoices()
   inquirer
     .prompt(allQuestions())
     .then((data) => {
