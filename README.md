@@ -13,8 +13,8 @@ Go to [Video demonstrating the functionality of the application](https://drive.g
 
 ![The Employee Tracker application screenshot](./assets/employee-tracker.png)
 
-## Credits
-
-Throughout this past year, I have completed different online courses and have previous programming experience by building my portfolio projects.
-
-Please see my [Portfolio](https://armanbarseghyan83.github.io/portfolio/).
+## Questions
+### Use the links below if you have any questions.
+- Email Address - [armanbarseghyan83@gmail.com](mailto:armanbarseghyan83@gmail.com)
+- Linkedin - [https://www.linkedin.com/in/arman-barseghyan](https://www.linkedin.com/in/arman-barseghyan)
+- GitHub Profile - [https://github.com/ArmanBarseghyan83](https://github.com/ArmanBarseghyan83)
